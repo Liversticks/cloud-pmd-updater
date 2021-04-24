@@ -83,10 +83,7 @@ namespace CloudPMD.BRT
                                 if (string.Equals(result.ResponseBody.Players.PlayerList[0].Role, "guest", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     var jsonString = await response.Content.ReadAsStringAsync();
-                                    using (JsonDocument document = JsonDocument.Parse(jsonString))
-                                    {
-                                        playerName = document.RootElement.GetProperty("data").GetProperty("players").GetProperty("data")[0].GetProperty("name").GetString();
-                                    }
+                                    playerName = Utils.GetGuestUser(jsonString);
                                 }
                                 else
                                 {

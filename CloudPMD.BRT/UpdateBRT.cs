@@ -9,20 +9,6 @@ using CloudPMD.Shared;
 
 namespace CloudPMD.BRT
 {
-    /// <summary>
-    /// Representation of BRT metadata entry in CosmosDB.
-    /// </summary>
-    public class BRTCollection
-    {
-        public string id { get; set; }
-        public string GameID { get; set; }
-        public string[] Categories { get; set; }
-        public string PlatformID { get; set; }
-        public string[] Platforms { get; set; }
-        public string LanguageID { get; set; }
-        public string[] Languages { get; set; }
-    }
-
     public static class UpdateBRT
     {   
         private static HttpClient httpClient = new HttpClient();
@@ -37,14 +23,14 @@ namespace CloudPMD.BRT
         /// <remarks>Hopefully mods don't change the ordering scheme again :)</remarks>
         /// <returns></returns>
         [FunctionName("UpdateBRT")]
-        public static async Task Run([TimerTrigger("0 0 0 * * *")]TimerInfo myTimer, 
+        public static async Task RunAsync([TimerTrigger("0 0 0 * * *")]TimerInfo myTimer, 
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection",
                 Id = "internal-Pokémon-Blue-Rescue-Team",
                 PartitionKey = "internal-Pokémon-Blue-Rescue-Team"
-            )] BRTCollection runInfo,
+            )] V1GameMetadata runInfo,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",

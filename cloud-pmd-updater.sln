@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloud-pmd-updater", "cloud-pmd-updater\cloud-pmd-updater.csproj", "{C1E2082D-F53D-4AD3-86E5-D66659FDF6F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudPMD.BRT", "CloudPMD.BRT\CloudPMD.BRT.csproj", "{C1E2082D-F53D-4AD3-86E5-D66659FDF6F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudPMD.Shared", "CloudPMD.Shared\CloudPMD.Shared.csproj", "{049CF14C-DB56-46C0-8047-4E46DDC533CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C1E2082D-F53D-4AD3-86E5-D66659FDF6F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1E2082D-F53D-4AD3-86E5-D66659FDF6F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1E2082D-F53D-4AD3-86E5-D66659FDF6F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{049CF14C-DB56-46C0-8047-4E46DDC533CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{049CF14C-DB56-46C0-8047-4E46DDC533CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{049CF14C-DB56-46C0-8047-4E46DDC533CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{049CF14C-DB56-46C0-8047-4E46DDC533CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

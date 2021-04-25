@@ -14,7 +14,7 @@ namespace CloudPMD.RRT
         public static HttpClient httpClient = new HttpClient();
 
         [FunctionName("UpdateRRT")]
-        public static async Task RunAsync([TimerTrigger("0 * * * * *")]TimerInfo myTimer,
+        public static async Task RunAsync([TimerTrigger("0 0 1 * * *")]TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
@@ -33,7 +33,7 @@ namespace CloudPMD.RRT
 
             //Category format: xxxxxxxx-Category Name
             //Platform format: xxxxxxxx-Platform Name
-            //Language format: ENG/JPN-xxxxxxxx
+            //Language format: xxxxxxxx-ENG/JPN
             foreach (var category in runInfo.Categories)
             {
                 foreach (var platform in runInfo.Platforms)
@@ -44,7 +44,7 @@ namespace CloudPMD.RRT
                         var platformInfo = platform.Split('-');
                         var languageInfo = language.Split('-');
 
-                        string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{runInfo.LanguageID}={languageInfo[1]}&top=1&embed=players";
+                        string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
                         log.LogInformation(url);
 
                         var response = await httpClient.GetAsync(url);
@@ -75,11 +75,11 @@ namespace CloudPMD.RRT
 
                                 var row = new V1Entry
                                 {
-                                    id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{platformInfo[0]}-{languageInfo[1]}",
+                                    id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{platformInfo[0]}-{languageInfo[0]}",
                                     Game = "Pokémon Mystery Dungeon: Red Rescue Team",
                                     Category = categoryInfo[1],
                                     Platform = platformInfo[1],
-                                    Language = languageInfo[0],
+                                    Language = languageInfo[1],
                                     Version = string.Empty,
                                     Runner = playerName,
                                     RunDate = runDate,

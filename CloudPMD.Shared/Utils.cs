@@ -13,4 +13,12 @@ public static class Utils
             return document.RootElement.GetProperty("data").GetProperty("players").GetProperty("data")[0].GetProperty("name").GetString();
         }
     }
+
+    public static string GetVersion(string jsonString, string srcVersionID)
+    {
+        using (JsonDocument document = JsonDocument.Parse(jsonString))
+        {
+            return document.RootElement.GetProperty("data").GetProperty("runs")[0].GetProperty("run").GetProperty("values").GetProperty(srcVersionID).GetString();
+        }
+    }
 }

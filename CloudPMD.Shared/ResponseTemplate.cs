@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CloudPMD.Shared
 {
     /// <summary>
-    /// src API response JSON
+    /// src API response JSON.
     /// </summary>
     public class Response
     {

@@ -9,5 +9,7 @@
         public string[] Platforms { get; set; }
         public string LanguageID { get; set; }
         public string[] Languages { get; set; }
+        public string VersionID { get; set; }
+        public string[] Versions { get; set; }
     }
 }

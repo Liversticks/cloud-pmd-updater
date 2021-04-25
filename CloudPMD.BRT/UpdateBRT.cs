@@ -39,10 +39,10 @@ namespace CloudPMD.BRT
             ILogger log)
         {
             log.LogInformation($"BRT Updater function started execution at: {DateTime.Now}");
-            
+
             //Category format: xxxxxxxx-Category Name
             //Platform format: xxxxxxxx-Platform Name
-            //Language format: ENG/JPN-xxxxxxxx
+            //Language format: xxxxxxxx-ENG/JPN
             foreach (var category in runInfo.Categories)
             {
                 foreach (var platform in runInfo.Platforms)
@@ -53,7 +53,7 @@ namespace CloudPMD.BRT
                         var platformInfo = platform.Split('-');
                         var languageInfo = language.Split('-');
                         
-                        string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{runInfo.LanguageID}={languageInfo[1]}&top=1&embed=players";
+                        string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
                         log.LogInformation(url);
 
                         var response = await httpClient.GetAsync(url);
@@ -84,11 +84,11 @@ namespace CloudPMD.BRT
                                 
                                 var row = new V1Entry
                                 {
-                                    id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{platformInfo[0]}-{languageInfo[1]}",
+                                    id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{platformInfo[0]}-{languageInfo[0]}",
                                     Game = "Pokémon Mystery Dungeon: Blue Rescue Team",
                                     Category = categoryInfo[1],
                                     Platform = platformInfo[1],
-                                    Language = languageInfo[0],
+                                    Language = languageInfo[1],
                                     Version = string.Empty,
                                     Runner = playerName,
                                     RunDate = runDate,

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudPMD.Sky", "CloudPMD.Sk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudPMD.WiiWare", "CloudPMD.WiiWare\CloudPMD.WiiWare.csproj", "{B67839ED-AA29-4030-9D43-165D054AAABD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudPMD.Gates", "CloudPMD.Gates\CloudPMD.Gates.csproj", "{0377A544-7508-412C-A81C-3BAB643B72D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{B67839ED-AA29-4030-9D43-165D054AAABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B67839ED-AA29-4030-9D43-165D054AAABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B67839ED-AA29-4030-9D43-165D054AAABD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0377A544-7508-412C-A81C-3BAB643B72D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0377A544-7508-412C-A81C-3BAB643B72D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0377A544-7508-412C-A81C-3BAB643B72D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0377A544-7508-412C-A81C-3BAB643B72D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

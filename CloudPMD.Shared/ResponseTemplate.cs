@@ -38,12 +38,24 @@ namespace CloudPMD.Shared
         [JsonPropertyName("times")]
         public TimeBox Times { get; set; }
 
+        [JsonPropertyName("system")]
+        public PlatformBox System { get; set; }
+
     }
 
     public class TimeBox
     {
         [JsonPropertyName("primary_t")]
         public int PrimaryTime { get; set; }
+    }
+
+    public class PlatformBox
+    {
+        [JsonPropertyName("platform")]
+        public string Platform { get; set; }
+        
+        [JsonPropertyName("emulated")]
+        public bool IsEmulator { get; set; }
     }
 
     public class PlayerBox

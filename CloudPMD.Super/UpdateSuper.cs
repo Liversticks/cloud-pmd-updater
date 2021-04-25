@@ -26,7 +26,8 @@ namespace CloudPMD.Super
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries, ILogger log)
+            )] IAsyncCollector<V1Entry> entries,
+            ILogger log)
         {
             log.LogInformation($"Super Updater function started execution at: {DateTime.Now}");
 

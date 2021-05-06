@@ -1,0 +1,70 @@
+{
+  "id": "internal-Pokémon-Explorers-of-Time-Darkness",
+  "GameID": "76r34v68",
+  "Categories": [
+    {
+      "CategoryID": "zd38omrk",
+      "Name": "Any% No WM",
+      "LanguageID": "789j199n",
+      "Languages": [
+        "21g484n1-ENG",
+        "jqz5p5gq-JPN"
+      ]
+    },
+    {
+      "CategoryID": "xd17grd8",
+      "Name": "Any% WM",
+      "LanguageID": "onv6xr08",
+      "Languages": [
+        "9qjzrpo1-ENG",
+        "jq64m8o1-JPN"
+      ]
+    },
+    {
+      "CategoryID": "wk68v4p2",
+      "Name": "Beat Darkrai No WM",
+      "LanguageID": "2lgr1m6n",
+      "Languages": [
+        "5leg8k61-ENG",
+        "0q5e8ovq-JPN"
+      ]
+    },
+    {
+      "CategoryID": "7kj13oxk",
+      "Name": "Beat Darkrai WM",
+      "LanguageID": "38djw5e8",
+      "Languages": [
+        "5lm4w98l-ENG",
+        "81wdrkmq-JPN"
+      ]
+    },
+    {
+      "CategoryID": "zd3xwqrd",
+      "Name": "Recruit 'Em All Minimum WM",
+      "LanguageID": "j84evvjn",
+      "Languages": [
+        "5legmkp1-ENG",
+        "0q5egorq-JPN"
+      ]
+    },
+    {
+      "CategoryID": "z27lrwgd",
+      "Name": "Recruit 'Em All Unlimited WM",
+      "LanguageID": "r8roqwr8",
+      "Languages": [
+        "zqo3275q-ENG",
+        "013m4yrl-JPN"
+      ]
+    }
+  ],
+  "PlatformID": "rn10ggk8",
+  "Platforms": [
+    "4lxwexj1-DS/3DS",
+    "814e7xwl-Emulator"
+  ],
+  "VersionID": "kn0qmo83",
+  "Versions": [
+    "gq75dpn1-Time",
+    "21gnd5xl-Darkness"
+  ]
+}

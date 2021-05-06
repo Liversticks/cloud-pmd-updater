@@ -1,0 +1,87 @@
+{
+  "id": "internal-Pokémon-Explorers-of-Sky",
+  "GameID": "j1lqnj6g",
+  "Categories": [
+    {
+      "CategoryID": "zd37wy2n",
+      "Name": "Any% WM",
+      "LanguageID": "ylpvm5kl",
+      "Languages": [
+        "p12opo4l-ENG",
+        "z195k58q-JPN"
+      ]
+    },
+    {
+      "CategoryID": "9kv76g3k",
+      "Name": "Any% No WM",
+      "LanguageID": "2lgg5d7l",
+      "Languages": [
+        "klr0p0jl-ENG",
+        "21dyzy41-JPN"
+      ]
+    },
+    {
+      "CategoryID": "xk9jw94d",
+      "Name": "Beat Darkrai WM",
+      "LanguageID": "9l73mqpn",
+      "Languages": [
+        "013vj73l-ENG",
+        "zqoygo21-JPN"
+      ]
+    },
+    {
+      "CategoryID": "xd1g35zd",
+      "Name": "Beat Darkrai No WM",
+      "LanguageID": "wlexmo48",
+      "Languages": [
+        "81090oj1-ENG",
+        "9qjew601-JPN"
+      ]
+    },
+    {
+      "CategoryID": "zdn1ennk",
+      "Name": "Recruit 'Em All WM",
+      "LanguageID": "0nwk11kn",
+      "Languages": [
+        "z19rezy1-ENG",
+        "p12zj2d1-JPN"
+      ]
+    },
+    {
+      "CategoryID": "8240g8nd",
+      "Name": "Recruit 'Em All No WM",
+      "LanguageID": "0nwoggkl",
+      "Languages": [
+        "0q5egxrq-ENG",
+        "4lxwe0j1-JPN"
+      ]
+    },
+    {
+      "CategoryID": "9d8p36qk",
+      "Name": "All Special Episodes",
+      "LanguageID": "p854pp0l",
+      "Languages": [
+        "z19g8zjl-ENG",
+        "p12ex2v1-JPN"
+      ]
+    },
+    {
+      "CategoryID": "5dw8y35d",
+      "Name": "All Icons WM",
+      "WMKey": "jlzkyg0l",
+      "WMValue": "5lmdnvml"
+    },
+    {
+      "CategoryID": "5dw8y35d",
+      "Name": "All Icons No WM",
+      "WMKey": "jlzkyg0l",
+      "WMValue": "81wn8gv1"
+    }
+  ],
+  "PlatformID": "78963368",
+  "Platforms": [
+    "814e7kwl-Wii U Virtual Console",
+    "z19g84jl-DS/3DS",
+    "p12ex5v1-Emulator"
+  ]
+}

@@ -1,35 +1,44 @@
-using System;
+ï»¿using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Text.Json;
 using CloudPMD.Shared;
 
-namespace CloudPMD.Gates
+namespace CloudPMD.Updater
 {
-    public static class UpdateGates
+    public static class UpdateBRT
     {
-        public static HttpClient httpClient = new HttpClient();
-        
-        [FunctionName("UpdateGates")]
-        public static async Task RunAsync([TimerTrigger("0 0 5 * * *")]TimerInfo myTimer,
+        private static HttpClient httpClient = new HttpClient();
+
+        /// <summary>
+        /// Checks BRT src leaderboard for updates of categories on the main board.
+        /// </summary>
+        /// <param name="myTimer"></param>
+        /// <param name="runInfo"></param>
+        /// <param name="entries"></param>
+        /// <param name="log"></param>
+        /// <remarks>Hopefully mods don't change the ordering scheme again :)</remarks>
+        /// <returns></returns>
+        [FunctionName("UpdateBRT")]
+        public static async Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection",
-                Id = "internal-Pokémon-Mystery-Dungeon-Gates",
-                PartitionKey = "internal-Pokémon-Mystery-Dungeon-Gates"
+                Id = "internal-PokÃ©mon-Blue-Rescue-Team",
+                PartitionKey = "internal-PokÃ©mon-Blue-Rescue-Team"
             )] V1GameMetadata runInfo,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries, 
+            )] IAsyncCollector<V1Entry> entries,
             ILogger log)
         {
-            log.LogInformation($"Gates Updater function started execution at: {DateTime.Now}");
+            log.LogInformation($"BRT Updater function started execution at: {DateTime.Now}");
 
             //Category format: xxxxxxxx-Category Name
             //Platform format: xxxxxxxx-Platform Name
@@ -76,7 +85,7 @@ namespace CloudPMD.Gates
                                 var row = new V1Entry
                                 {
                                     id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{platformInfo[0]}-{languageInfo[0]}",
-                                    Game = "Pokémon Mystery Dungeon: Gates to Infinity",
+                                    Game = "PokÃ©mon Mystery Dungeon: Blue Rescue Team",
                                     Category = categoryInfo[1],
                                     Platform = platformInfo[1],
                                     Language = languageInfo[1],
@@ -99,3 +108,4 @@ namespace CloudPMD.Gates
         }
     }
 }
+

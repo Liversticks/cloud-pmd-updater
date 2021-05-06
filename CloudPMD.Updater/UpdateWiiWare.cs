@@ -1,35 +1,44 @@
-using System;
+ï»¿using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.Collections.Generic;
 using CloudPMD.Shared;
 
-namespace CloudPMD.RTDX
+namespace CloudPMD.Updater
 {
-    public static class UpdateRTDX
+    public static class UpdateWiiWare
     {
         public static HttpClient httpClient = new HttpClient();
-        
-        [FunctionName("UpdateRTDX")]
-        public static async Task RunAsync([TimerTrigger("0 0 7 * * *")]TimerInfo myTimer,
+
+        [FunctionName("UpdateWiiWare")]
+        public static async Task Run([TimerTrigger("0 0 4 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection",
-                Id = "internal-Pokémon-Mystery-Dungeon-RTDX",
-                PartitionKey = "internal-Pokémon-Mystery-Dungeon-RTDX"
+                Id = "internal-PokÃ©mon-Mystery-Dungeon-WiiWare",
+                PartitionKey = "internal-PokÃ©mon-Mystery-Dungeon-WiiWare"
             )] V1GameMetadata runInfo,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries, 
+            )] IAsyncCollector<V1Entry> entries,
             ILogger log)
         {
-            log.LogInformation($"RTDX Updater function started execution at: {DateTime.Now}");
+            log.LogInformation($"WiiWare Updater function started execution at: {DateTime.Now}");
+
+            // Get version info
+            var versionMap = new Dictionary<string, string>();
+            foreach (var version in runInfo.Versions)
+            {
+                var versionInfo = version.Split('-');
+                versionMap.Add(versionInfo[0], versionInfo[1]);
+            }
 
             //Category format: xxxxxxxx-Category Name
             //Language format: xxxxxxxx-ENG/JPN
@@ -44,8 +53,8 @@ namespace CloudPMD.RTDX
                     log.LogInformation(url);
 
                     var response = await httpClient.GetAsync(url);
-                    var resStream = await response.Content.ReadAsStreamAsync();
-                    Response result = await JsonSerializer.DeserializeAsync<Response>(resStream);
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    Response result = JsonSerializer.Deserialize<Response>(jsonString);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -55,7 +64,6 @@ namespace CloudPMD.RTDX
                             string playerName;
                             if (string.Equals(result.ResponseBody.Players.PlayerList[0].Role, "guest", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                var jsonString = await response.Content.ReadAsStringAsync();
                                 playerName = Utils.GetGuestUser(jsonString);
                             }
                             else
@@ -68,15 +76,18 @@ namespace CloudPMD.RTDX
                             var runTime = result.ResponseBody.RunList[0].Run.Times.PrimaryTime;
                             var runDate = result.ResponseBody.RunList[0].Run.RunDate;
                             var srcID = result.ResponseBody.RunList[0].Run.Id;
+                            var version = versionMap[Utils.GetVersion(jsonString, runInfo.VersionID)];
+                            // Currently only supports Wii (modified) and emulators
+                            var platform = result.ResponseBody.RunList[0].Run.System.IsEmulator ? "Emulator" : "Wii";
 
                             var row = new V1Entry
                             {
                                 id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{runInfo.PlatformID}-{languageInfo[0]}",
-                                Game = "Pokémon Mystery Dungeon: Rescue Team DX",
+                                Game = "PokÃ©mon Mystery Dungeon: WiiWare",
                                 Category = categoryInfo[1],
-                                Platform = "Switch",
+                                Platform = platform,
                                 Language = languageInfo[1],
-                                Version = string.Empty,
+                                Version = version,
                                 Runner = playerName,
                                 RunDate = runDate,
                                 RunTime = runTime,

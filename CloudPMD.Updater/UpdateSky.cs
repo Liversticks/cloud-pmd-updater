@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
@@ -8,7 +8,7 @@ using System.Net.Http;
 using CloudPMD.Shared;
 using System.Collections.Generic;
 
-namespace CloudPMD.Sky
+namespace CloudPMD.Updater
 {
     public static class UpdateSky
     {
@@ -19,7 +19,7 @@ namespace CloudPMD.Sky
             public string PlatformID { get; set; }
             public string[] Platforms { get; set; }
         }
-           
+
 
         public class SkyCategory
         {
@@ -27,22 +27,22 @@ namespace CloudPMD.Sky
             public string Name { get; set; }
             public string LanguageID { get; set; }
             public string[] Languages { get; set; }
-            
+
             // These two properties are only used for All Icons
             public string WMKey { get; set; }
             public string WMValue { get; set; }
         }
 
         public static HttpClient httpClient = new HttpClient();
-        
+
         [FunctionName("UpdateSky")]
-        public static async Task RunAsync([TimerTrigger("0 0 3 * * *")]TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 0 3 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection",
-                Id = "internal-Pokémon-Explorers-of-Sky",
-                PartitionKey = "internal-Pokémon-Explorers-of-Sky"
+                Id = "internal-PokÃ©mon-Explorers-of-Sky",
+                PartitionKey = "internal-PokÃ©mon-Explorers-of-Sky"
             )] V1SkyMetadata runInfo,
             [CosmosDB(
                 databaseName: "Shared-Free",
@@ -94,7 +94,7 @@ namespace CloudPMD.Sky
                                 var row = new V1Entry
                                 {
                                     id = $"run-{runInfo.GameID}-{category.CategoryID}-{platformInfo[0]}-{category.WMKey}",
-                                    Game = "Pokémon Mystery Dungeon: Explorers of Sky",
+                                    Game = "PokÃ©mon Mystery Dungeon: Explorers of Sky",
                                     Category = category.Name,
                                     Platform = platformInfo[1],
                                     Language = "ENG",
@@ -116,7 +116,7 @@ namespace CloudPMD.Sky
                     {
                         foreach (var language in category.Languages)
                         {
-                            var languageInfo = language.Split('-');                            
+                            var languageInfo = language.Split('-');
 
                             string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{category.CategoryID}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{category.LanguageID}={languageInfo[0]}&top=1&embed=players";
                             log.LogInformation(url);
@@ -149,7 +149,7 @@ namespace CloudPMD.Sky
                                     var row = new V1Entry
                                     {
                                         id = $"run-{runInfo.GameID}-{category.CategoryID}-{platformInfo[0]}-{languageInfo[0]}",
-                                        Game = "Pokémon Mystery Dungeon: Explorers of Sky",
+                                        Game = "PokÃ©mon Mystery Dungeon: Explorers of Sky",
                                         Category = category.Name,
                                         Platform = platformInfo[1],
                                         Language = languageInfo[1],
@@ -173,3 +173,4 @@ namespace CloudPMD.Sky
         }
     }
 }
+

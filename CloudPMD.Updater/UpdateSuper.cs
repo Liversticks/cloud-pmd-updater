@@ -1,35 +1,35 @@
-using System;
-using System.Net.Http;
+ï»¿using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using CloudPMD.Shared;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
+using System.Net.Http;
 
-namespace CloudPMD.RRT
+namespace CloudPMD.Updater
 {
-    public static class UpdateRRT
+    public static class UpdateSuper
     {
         public static HttpClient httpClient = new HttpClient();
 
-        [FunctionName("UpdateRRT")]
-        public static async Task RunAsync([TimerTrigger("0 0 1 * * *")]TimerInfo myTimer,
+        [FunctionName("UpdateSuper")]
+        public static async Task Run([TimerTrigger("0 0 6 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection",
-                Id = "internal-Pokémon-Red-Rescue-Team",
-                PartitionKey = "internal-Pokémon-Red-Rescue-Team"
+                Id = "internal-PokÃ©mon-Super-Mystery-Dungeon",
+                PartitionKey = "internal-PokÃ©mon-Super-Mystery-Dungeon"
             )] V1GameMetadata runInfo,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries, 
+            )] IAsyncCollector<V1Entry> entries,
             ILogger log)
         {
-            log.LogInformation($"RRT Updater function started execution at: {DateTime.Now}");
+            log.LogInformation($"Super Updater function started execution at: {DateTime.Now}");
 
             //Category format: xxxxxxxx-Category Name
             //Platform format: xxxxxxxx-Platform Name
@@ -76,7 +76,7 @@ namespace CloudPMD.RRT
                                 var row = new V1Entry
                                 {
                                     id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{platformInfo[0]}-{languageInfo[0]}",
-                                    Game = "Pokémon Mystery Dungeon: Red Rescue Team",
+                                    Game = "PokÃ©mon Super Mystery Dungeon",
                                     Category = categoryInfo[1],
                                     Platform = platformInfo[1],
                                     Language = languageInfo[1],
@@ -96,7 +96,7 @@ namespace CloudPMD.RRT
                     }
                 }
             }
-
         }
     }
 }
+

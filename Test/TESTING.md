@@ -16,7 +16,8 @@ NOTE: The JSON files are accurate as of May 6, 2021. Hopefully the SRC mods don'
 2. Each function should execute in less than 1 minute.
 3. Runs should be created in the V1-pmdboard container.
 4. Runs should only be created if the game-category-platform-language combination has a non-empty record-holder.
-5. Runs should have the following format: 
+5. Runs should have the following format:
+
 Property Name | Expected Value
 ------------- | --------------
 id | "run-<SRC game ID>-<SRC category ID>-<SRC platform ID>-<SRC language ID>"

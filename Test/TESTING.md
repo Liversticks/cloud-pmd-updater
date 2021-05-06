@@ -20,7 +20,7 @@ NOTE: The JSON files are accurate as of May 6, 2021. Hopefully the SRC mods don'
 
 Property Name | Expected Value
 ------------- | --------------
-id | "run-<SRC game ID>-<SRC category ID>-<SRC platform ID>-<SRC language ID>"
+id | run-[SRC game ID]-[SRC category ID]-[SRC platform ID]-[SRC language ID]
 Game | Title of the game
 Category | Category of run
 Platform | Platform the run was performed on

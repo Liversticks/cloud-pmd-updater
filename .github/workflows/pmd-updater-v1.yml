@@ -3,6 +3,9 @@ on:
   push:
     branches:
     - master
+  pull_request:
+    branches:
+    - master
 env:
   AZURE_FUNCTIONAPP_NAME: pmd-updater-v1
   AZURE_FUNCTIONAPP_PACKAGE_PATH: CloudPMD.Updater\published

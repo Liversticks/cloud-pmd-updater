@@ -3,12 +3,11 @@
 ## Testing Setup
 
 1. Download the Azure Cosmos DB Emulator [here](https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator).
-2. In the Cosmos DB emulator, create a new database and container as follows:
-	1. Create a new database with database ID "Shared-Free". Leave throughput at the default (manual 400 RU/s).
-	2. Create a new container with database ID "Shared-Free", container ID "V1-pmdboard", and partition key "/id".
-3. In the emulator, for each json file in this folder, create an entry in the V1-pmdboard container.
+2. Start the Utilities Function App.
+3. Make a POST request to localhost:7073/api/SeedDatabase.
 
-NOTE: The JSON files are accurate as of May 6, 2021. Hopefully the SRC mods don't end up changing the schema yet again...
+NOTE: The DB seed script creates a new Cosmos DB database with 400 RU/s provisioned throughput.
+For a "production" environment, it is recommended to fine-tune DB creation via the Azure portal.
 
 ## Test Cases
 

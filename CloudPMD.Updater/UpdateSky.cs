@@ -12,27 +12,6 @@ namespace CloudPMD.Updater
 {
     public static class UpdateSky
     {
-        public class V1SkyMetadata
-        {
-            public string GameID { get; set; }
-            public IList<SkyCategory> Categories { get; set; }
-            public string PlatformID { get; set; }
-            public string[] Platforms { get; set; }
-        }
-
-
-        public class SkyCategory
-        {
-            public string CategoryID { get; set; }
-            public string Name { get; set; }
-            public string LanguageID { get; set; }
-            public string[] Languages { get; set; }
-
-            // These two properties are only used for All Icons
-            public string WMKey { get; set; }
-            public string WMValue { get; set; }
-        }
-
         public static HttpClient httpClient = new HttpClient();
 
         [FunctionName("UpdateSky")]
@@ -48,15 +27,28 @@ namespace CloudPMD.Updater
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries, ILogger log)
+            )] IAsyncCollector<V1CombinedRuns> entries, ILogger log)
         {
             log.LogInformation($"Sky Updater function started execution at: {DateTime.Now}");
+
+            var gameInfo = new V1CombinedRuns
+            {
+                id = "gameinfo-Sky",
+                Title = "Pokémon Mystery Dungeon: Explorers of Sky",
+                Categories = new List<Category>()
+            };
 
             //Category format: xxxxxxxx-Category Name
             //Platform format: xxxxxxxx-Platform Name
             //Language format: xxxxxxxx-JPN/ENG 
             foreach (var category in runInfo.Categories)
             {
+                var internalCategory = new Category
+                {
+                    Name = category.Name,
+                    Runs = new List<InternalRun>()
+                };
+
                 foreach (var platform in runInfo.Platforms)
                 {
                     var platformInfo = platform.Split('-');
@@ -91,11 +83,9 @@ namespace CloudPMD.Updater
                                 var runDate = result.ResponseBody.RunList[0].Run.RunDate;
                                 var srcID = result.ResponseBody.RunList[0].Run.Id;
 
-                                var row = new V1Entry
+
+                                var internalRow = new InternalRun
                                 {
-                                    id = $"run-{runInfo.GameID}-{category.CategoryID}-{platformInfo[0]}-{category.WMKey}",
-                                    Game = "Pokémon Mystery Dungeon: Explorers of Sky",
-                                    Category = category.Name,
                                     Platform = platformInfo[1],
                                     Language = "ENG",
                                     Version = string.Empty,
@@ -104,7 +94,7 @@ namespace CloudPMD.Updater
                                     RunTime = runTime,
                                     SRCLink = srcID
                                 };
-                                await entries.AddAsync(row);
+                                internalCategory.Runs.Add(internalRow);
                             }
                         }
                         else
@@ -146,11 +136,8 @@ namespace CloudPMD.Updater
                                     var runDate = result.ResponseBody.RunList[0].Run.RunDate;
                                     var srcID = result.ResponseBody.RunList[0].Run.Id;
 
-                                    var row = new V1Entry
+                                    var internalRow = new InternalRun
                                     {
-                                        id = $"run-{runInfo.GameID}-{category.CategoryID}-{platformInfo[0]}-{languageInfo[0]}",
-                                        Game = "Pokémon Mystery Dungeon: Explorers of Sky",
-                                        Category = category.Name,
                                         Platform = platformInfo[1],
                                         Language = languageInfo[1],
                                         Version = string.Empty,
@@ -159,7 +146,7 @@ namespace CloudPMD.Updater
                                         RunTime = runTime,
                                         SRCLink = srcID
                                     };
-                                    await entries.AddAsync(row);
+                                    internalCategory.Runs.Add(internalRow);
                                 }
                             }
                             else
@@ -169,7 +156,9 @@ namespace CloudPMD.Updater
                         }
                     }
                 }
+                gameInfo.Categories.Add(internalCategory);
             }
+            await entries.AddAsync(gameInfo);
         }
     }
 }

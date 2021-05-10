@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Text.Json;
 using CloudPMD.Shared;
 
@@ -23,7 +24,7 @@ namespace CloudPMD.Updater
         /// <remarks>Hopefully mods don't change the ordering scheme again :)</remarks>
         /// <returns></returns>
         [FunctionName("UpdateBRT")]
-        public static async Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 * * * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
@@ -35,22 +36,36 @@ namespace CloudPMD.Updater
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries,
+            )] IAsyncCollector<V1CombinedRuns> entries,
             ILogger log)
         {
             log.LogInformation($"BRT Updater function started execution at: {DateTime.Now}");
-
+            
+            var gameInfo = new V1CombinedRuns
+            { 
+                id = "gameinfo-BRT",
+                Title = "Pokémon Mystery Dungeon: Blue Rescue Team",
+                Categories = new List<Category>()
+            };
+            
             //Category format: xxxxxxxx-Category Name
             //Platform format: xxxxxxxx-Platform Name
             //Language format: xxxxxxxx-ENG/JPN
             foreach (var category in runInfo.Categories)
             {
+                var categoryInfo = category.Split('-');
+                var internalCategory = new Category
+                {
+                    Name = categoryInfo[1],
+                    Runs = new List<InternalRun>()
+                };
+                
                 foreach (var platform in runInfo.Platforms)
                 {
+                    var platformInfo = platform.Split('-');
+
                     foreach (var language in runInfo.Languages)
-                    {
-                        var categoryInfo = category.Split('-');
-                        var platformInfo = platform.Split('-');
+                    {                        
                         var languageInfo = language.Split('-');
 
                         string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
@@ -82,11 +97,8 @@ namespace CloudPMD.Updater
                                 var runDate = result.ResponseBody.RunList[0].Run.RunDate;
                                 var srcID = result.ResponseBody.RunList[0].Run.Id;
 
-                                var row = new V1Entry
+                                var internalRow = new InternalRun
                                 {
-                                    id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{platformInfo[0]}-{languageInfo[0]}",
-                                    Game = "Pokémon Mystery Dungeon: Blue Rescue Team",
-                                    Category = categoryInfo[1],
                                     Platform = platformInfo[1],
                                     Language = languageInfo[1],
                                     Version = string.Empty,
@@ -95,7 +107,7 @@ namespace CloudPMD.Updater
                                     RunTime = runTime,
                                     SRCLink = srcID
                                 };
-                                await entries.AddAsync(row);
+                                internalCategory.Runs.Add(internalRow);
                             }
                         }
                         else
@@ -104,7 +116,9 @@ namespace CloudPMD.Updater
                         }
                     }
                 }
+                gameInfo.Categories.Add(internalCategory);
             }
+            await entries.AddAsync(gameInfo);
         }
     }
 }

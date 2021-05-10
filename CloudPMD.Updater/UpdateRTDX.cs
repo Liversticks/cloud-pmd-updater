@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CloudPMD.Shared;
+using System.Collections.Generic;
 
 namespace CloudPMD.Updater
 {
@@ -26,18 +27,31 @@ namespace CloudPMD.Updater
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries,
+            )] IAsyncCollector<V1CombinedRuns> entries,
             ILogger log)
         {
             log.LogInformation($"RTDX Updater function started execution at: {DateTime.Now}");
+
+            var gameInfo = new V1CombinedRuns
+            {
+                id = "gameinfo-RTDX",
+                Title = "Pokémon Mystery Dungeon: Rescue Team DX",
+                Categories = new List<Category>()
+            };
 
             //Category format: xxxxxxxx-Category Name
             //Language format: xxxxxxxx-ENG/JPN
             foreach (var category in runInfo.Categories)
             {
-                foreach (var language in runInfo.Languages)
+                var categoryInfo = category.Split('-');
+                var internalCategory = new Category
                 {
-                    var categoryInfo = category.Split('-');
+                    Name = categoryInfo[1],
+                    Runs = new List<InternalRun>()
+                };
+
+                foreach (var language in runInfo.Languages)
+                {                    
                     var languageInfo = language.Split('-');
 
                     string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
@@ -69,11 +83,8 @@ namespace CloudPMD.Updater
                             var runDate = result.ResponseBody.RunList[0].Run.RunDate;
                             var srcID = result.ResponseBody.RunList[0].Run.Id;
 
-                            var row = new V1Entry
+                            var internalRow = new InternalRun
                             {
-                                id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{runInfo.PlatformID}-{languageInfo[0]}",
-                                Game = "Pokémon Mystery Dungeon: Rescue Team DX",
-                                Category = categoryInfo[1],
                                 Platform = "Switch",
                                 Language = languageInfo[1],
                                 Version = string.Empty,
@@ -82,7 +93,7 @@ namespace CloudPMD.Updater
                                 RunTime = runTime,
                                 SRCLink = srcID
                             };
-                            await entries.AddAsync(row);
+                            internalCategory.Runs.Add(internalRow);
                         }
                     }
                     else
@@ -90,7 +101,9 @@ namespace CloudPMD.Updater
                         log.LogError($"Request to {url} failed. Error code: {response.StatusCode}");
                     }
                 }
+                gameInfo.Categories.Add(internalCategory);
             }
+            await entries.AddAsync(gameInfo);
         }
     }
 }

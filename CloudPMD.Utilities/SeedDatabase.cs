@@ -358,6 +358,17 @@ namespace CloudPMD.Utilities
                     "0133o2x1-JPN"
                 },
                 PlatformID = "7m6ylw9p"
+            },
+            new V1GameMetadata
+            {
+                id = "internal-Multiple-Mystery-Dungeon",
+                GameID = "j1l35z1g",
+                Categories = new string[]
+                {
+                    "9d8j0glk-PMD Series Any% Unrestricted",
+                    "9d8469qk-PMD Series Any% No QS, No WM",
+                    "rklln8nk-PMD Series Recruit 'Em All Unrestricted"
+                }
             }
         };
 

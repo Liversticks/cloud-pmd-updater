@@ -12,7 +12,7 @@ namespace CloudPMD.Updater
     public static class UpdateGates
     {
         [FunctionName("UpdateGates")]
-        public static async Task Run([TimerTrigger("0 0 5 * * *")] TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 5 0 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",

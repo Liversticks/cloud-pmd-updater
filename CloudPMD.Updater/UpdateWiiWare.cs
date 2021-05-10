@@ -12,7 +12,7 @@ namespace CloudPMD.Updater
     public static class UpdateWiiWare
     {
         [FunctionName("UpdateWiiWare")]
-        public static async Task Run([TimerTrigger("0 0 4 * * *")] TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 4 0 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",

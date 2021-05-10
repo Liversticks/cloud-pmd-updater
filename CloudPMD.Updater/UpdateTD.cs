@@ -22,7 +22,7 @@ namespace CloudPMD.Updater
         /// on SRC has its own language variable.</remarks>
         /// <returns></returns>
         [FunctionName("UpdateTD")]
-        public static async Task Run([TimerTrigger("0 0 2 * * *")] TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 2 0 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",

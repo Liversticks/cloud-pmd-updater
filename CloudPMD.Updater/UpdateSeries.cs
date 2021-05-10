@@ -12,13 +12,13 @@ namespace CloudPMD.Updater
     public static class UpdateSeries
     {        
         [FunctionName("UpdateSeries")]
-        public static async Task Run([TimerTrigger("0 * * 1 * *")]TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 8 0 * * *")]TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection",
-                Id = "internal-Pokémon-Mystery-Dungeon-Series",
-                PartitionKey = "internal-Pokémon-Mystery-Dungeon-Series"
+                Id = "internal-Multiple-Mystery-Dungeon",
+                PartitionKey = "internal-Multiple-Mystery-Dungeon"
             )] V1GameMetadata runInfo,
             [CosmosDB(
                 databaseName: "Shared-Free",

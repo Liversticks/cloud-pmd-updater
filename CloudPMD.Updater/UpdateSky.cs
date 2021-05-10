@@ -12,7 +12,7 @@ namespace CloudPMD.Updater
     public static class UpdateSky
     {
         [FunctionName("UpdateSky")]
-        public static async Task Run([TimerTrigger("0 0 3 * * *")] TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 3 0 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",

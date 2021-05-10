@@ -21,7 +21,7 @@ namespace CloudPMD.Updater
         /// <remarks>Hopefully mods don't change the ordering scheme again :)</remarks>
         /// <returns></returns>
         [FunctionName("UpdateBRT")]
-        public static async Task Run([TimerTrigger("0 * * * * *")] TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",

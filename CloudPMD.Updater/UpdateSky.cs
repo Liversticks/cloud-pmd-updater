@@ -4,7 +4,6 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Text.Json;
-using System.Net.Http;
 using CloudPMD.Shared;
 using System.Collections.Generic;
 
@@ -12,8 +11,6 @@ namespace CloudPMD.Updater
 {
     public static class UpdateSky
     {
-        public static HttpClient httpClient = new HttpClient();
-
         [FunctionName("UpdateSky")]
         public static async Task Run([TimerTrigger("0 0 3 * * *")] TimerInfo myTimer,
             [CosmosDB(
@@ -58,7 +55,7 @@ namespace CloudPMD.Updater
                         string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{category.CategoryID}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{category.WMKey}={category.WMValue}&top=1&embed=players";
                         log.LogInformation(url);
 
-                        var response = await httpClient.GetAsync(url);
+                        var response = await FunctionHttpClient.httpClient.GetAsync(url);
                         var jsonString = await response.Content.ReadAsStringAsync();
                         Response result = JsonSerializer.Deserialize<Response>(jsonString);
 
@@ -111,7 +108,7 @@ namespace CloudPMD.Updater
                             string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{category.CategoryID}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{category.LanguageID}={languageInfo[0]}&top=1&embed=players";
                             log.LogInformation(url);
 
-                            var response = await httpClient.GetAsync(url);
+                            var response = await FunctionHttpClient.httpClient.GetAsync(url);
                             var jsonString = await response.Content.ReadAsStringAsync();
                             Response result = JsonSerializer.Deserialize<Response>(jsonString);
 

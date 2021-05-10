@@ -5,15 +5,12 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Text.Json;
 using CloudPMD.Shared;
-using System.Net.Http;
 using System.Collections.Generic;
 
 namespace CloudPMD.Updater
 {
     public static class UpdateTD
     {
-        public static HttpClient httpClient = new HttpClient();
-
         /// <summary>
         /// Checks Time/Darkness leaderboard for updates of categories on the main board.
         /// </summary>
@@ -80,7 +77,7 @@ namespace CloudPMD.Updater
                         string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{category.CategoryID}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{category.LanguageID}={languageInfo[0]}&top=1&embed=players";
                         log.LogInformation(url);
 
-                        var response = await httpClient.GetAsync(url);
+                        var response = await FunctionHttpClient.httpClient.GetAsync(url);
                         var jsonString = await response.Content.ReadAsStringAsync();
                         Response result = JsonSerializer.Deserialize<Response>(jsonString);
 

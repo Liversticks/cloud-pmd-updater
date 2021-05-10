@@ -2,7 +2,6 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CloudPMD.Shared;
@@ -12,8 +11,6 @@ namespace CloudPMD.Updater
 {
     public static class UpdateRTDX
     {
-        public static HttpClient httpClient = new HttpClient();
-
         [FunctionName("UpdateRTDX")]
         public static async Task Run([TimerTrigger("0 0 7 * * *")] TimerInfo myTimer,
             [CosmosDB(
@@ -57,7 +54,7 @@ namespace CloudPMD.Updater
                     string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
                     log.LogInformation(url);
 
-                    var response = await httpClient.GetAsync(url);
+                    var response = await FunctionHttpClient.httpClient.GetAsync(url);
                     var resStream = await response.Content.ReadAsStreamAsync();
                     Response result = await JsonSerializer.DeserializeAsync<Response>(resStream);
 

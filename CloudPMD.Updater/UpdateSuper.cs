@@ -5,15 +5,12 @@ using Microsoft.Extensions.Logging;
 using CloudPMD.Shared;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Net.Http;
 using System.Collections.Generic;
 
 namespace CloudPMD.Updater
 {
     public static class UpdateSuper
     {
-        public static HttpClient httpClient = new HttpClient();
-
         [FunctionName("UpdateSuper")]
         public static async Task Run([TimerTrigger("0 0 6 * * *")] TimerInfo myTimer,
             [CosmosDB(
@@ -62,7 +59,7 @@ namespace CloudPMD.Updater
                         string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.PlatformID}={platformInfo[0]}&var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
                         log.LogInformation(url);
 
-                        var response = await httpClient.GetAsync(url);
+                        var response = await FunctionHttpClient.httpClient.GetAsync(url);
                         var resStream = await response.Content.ReadAsStreamAsync();
                         Response result = await JsonSerializer.DeserializeAsync<Response>(resStream);
 

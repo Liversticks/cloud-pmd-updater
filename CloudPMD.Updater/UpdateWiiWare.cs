@@ -4,7 +4,6 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Net.Http;
 using System.Collections.Generic;
 using CloudPMD.Shared;
 
@@ -12,8 +11,6 @@ namespace CloudPMD.Updater
 {
     public static class UpdateWiiWare
     {
-        public static HttpClient httpClient = new HttpClient();
-
         [FunctionName("UpdateWiiWare")]
         public static async Task Run([TimerTrigger("0 0 4 * * *")] TimerInfo myTimer,
             [CosmosDB(
@@ -66,7 +63,7 @@ namespace CloudPMD.Updater
                     string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
                     log.LogInformation(url);
 
-                    var response = await httpClient.GetAsync(url);
+                    var response = await FunctionHttpClient.httpClient.GetAsync(url);
                     var jsonString = await response.Content.ReadAsStringAsync();
                     Response result = JsonSerializer.Deserialize<Response>(jsonString);
 

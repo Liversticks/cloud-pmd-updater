@@ -4,7 +4,6 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Net.Http;
 using System.Collections.Generic;
 using CloudPMD.Shared;
 
@@ -12,10 +11,8 @@ namespace CloudPMD.Updater
 {
     public static class UpdateWiiWare
     {
-        public static HttpClient httpClient = new HttpClient();
-
         [FunctionName("UpdateWiiWare")]
-        public static async Task Run([TimerTrigger("0 0 4 * * *")] TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 4 0 * * *")] TimerInfo myTimer,
             [CosmosDB(
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
@@ -27,10 +24,17 @@ namespace CloudPMD.Updater
                 databaseName: "Shared-Free",
                 collectionName: "V1-pmdboard",
                 ConnectionStringSetting = "CosmosDBConnection"
-            )] IAsyncCollector<V1Entry> entries,
+            )] IAsyncCollector<V1CombinedRuns> entries,
             ILogger log)
         {
             log.LogInformation($"WiiWare Updater function started execution at: {DateTime.Now}");
+
+            var gameInfo = new V1CombinedRuns
+            {
+                id = "gameinfo-WiiWare",
+                Title = "Pokémon Mystery Dungeon: WiiWare",
+                Categories = new List<Category>()
+            };
 
             // Get version info
             var versionMap = new Dictionary<string, string>();
@@ -44,15 +48,22 @@ namespace CloudPMD.Updater
             //Language format: xxxxxxxx-ENG/JPN
             foreach (var category in runInfo.Categories)
             {
+                var categoryInfo = category.Split('-');
+                var internalCategory = new Category
+                {
+                    Name = categoryInfo[1],
+                    Runs = new List<InternalRun>()
+                };
+
                 foreach (var language in runInfo.Languages)
                 {
-                    var categoryInfo = category.Split('-');
+                    
                     var languageInfo = language.Split('-');
 
                     string url = $"https://speedrun.com/api/v1/leaderboards/{runInfo.GameID}/category/{categoryInfo[0]}?var-{runInfo.LanguageID}={languageInfo[0]}&top=1&embed=players";
                     log.LogInformation(url);
 
-                    var response = await httpClient.GetAsync(url);
+                    var response = await FunctionHttpClient.httpClient.GetAsync(url);
                     var jsonString = await response.Content.ReadAsStringAsync();
                     Response result = JsonSerializer.Deserialize<Response>(jsonString);
 
@@ -80,20 +91,17 @@ namespace CloudPMD.Updater
                             // Currently only supports Wii (modified) and emulators
                             var platform = result.ResponseBody.RunList[0].Run.System.IsEmulator ? "Emulator" : "Wii";
 
-                            var row = new V1Entry
+                            var internalRow = new InternalRun
                             {
-                                id = $"run-{runInfo.GameID}-{categoryInfo[0]}-{runInfo.PlatformID}-{languageInfo[0]}",
-                                Game = "Pokémon Mystery Dungeon: WiiWare",
-                                Category = categoryInfo[1],
                                 Platform = platform,
                                 Language = languageInfo[1],
-                                Version = version,
+                                Version = string.Empty,
                                 Runner = playerName,
                                 RunDate = runDate,
                                 RunTime = runTime,
                                 SRCLink = srcID
                             };
-                            await entries.AddAsync(row);
+                            internalCategory.Runs.Add(internalRow);
                         }
                     }
                     else
@@ -101,7 +109,9 @@ namespace CloudPMD.Updater
                         log.LogError($"Request to {url} failed. Error code: {response.StatusCode}");
                     }
                 }
+                gameInfo.Categories.Add(internalCategory);
             }
+            await entries.AddAsync(gameInfo);
         }
     }
 }

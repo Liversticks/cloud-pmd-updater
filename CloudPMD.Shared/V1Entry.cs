@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains all base information needed for individual runs.
     /// </summary>
-    /// <remarks>Applies to version V1 (first prototype).</remarks>
+    /// <remarks>Deprecated. Use V1CombinedRuns instead.</remarks>
     public class V1Entry
     {
         public string id { get; set; }
